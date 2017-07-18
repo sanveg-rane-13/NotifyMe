@@ -15,6 +15,7 @@ public class Usercriteria implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int trackId;
 
 	private double criteria;
