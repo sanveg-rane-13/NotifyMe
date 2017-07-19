@@ -12,6 +12,16 @@ import org.springframework.stereotype.Component;
 
 import com.app.notifyme.models.Product;
 import com.app.notifyme.repositories.ProductRepository;
+import com.app.notifyme.repositories.ProductStatRepository;
+
+
+/*
+ * Component to schedule check on product prices from various websites
+ * Product table contains product url and xpath to the price
+ * Saving the product list locally
+ * The product list will be updated only on changes to the products table to reduce access on the database
+ * The scheduler will check price for products on set time by starting threads for different product elements in the arraylist.
+ */
 
 @Component
 public class SchedulerService {
@@ -20,6 +30,9 @@ public class SchedulerService {
 
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private ProductStatRepository  productStatRepository;
 
 	private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
@@ -36,7 +49,7 @@ public class SchedulerService {
 
 		for (Product product : this.prodList) {
 
-			PriceExtractor pExtract = new PriceExtractor(product,productRepository);
+			PriceExtractor pExtract = new PriceExtractor(product,productRepository, productStatRepository);
 			executorService.execute(pExtract);
 		}
 	}

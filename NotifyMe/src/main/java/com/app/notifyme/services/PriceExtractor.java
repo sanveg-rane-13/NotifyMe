@@ -7,19 +7,34 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import com.app.notifyme.models.Product;
+import com.app.notifyme.models.Productstat;
 import com.app.notifyme.repositories.ProductRepository;
+import com.app.notifyme.repositories.ProductStatRepository;
+
+/*
+ * Thread that gets product price from the url set in the product table.
+ * Gets the page using JSOUP library and stores in a document object.
+ * Searches for the xpath using getElement by id method.
+ * Converts the obtained string into double price value.
+ * Updates the product price injected from the scheduler service.
+ * 
+ * Takes current price and date
+ * Then add statistics about the product into the Productstats table
+ */
 
 public class PriceExtractor implements Runnable {
-
+	
+	private ProductStatRepository productStatRepository;
 	private ProductRepository productRepository;
 
 	private final String url;
 	private final String xPath;
 	private Product product;
 
-	public PriceExtractor(Product product, ProductRepository productRepository) {
+	public PriceExtractor(Product product, ProductRepository productRepository, ProductStatRepository productStatRepository) {
 		super();
 		this.productRepository = productRepository;
+		this.productStatRepository = productStatRepository;
 		this.product = product;
 		this.url = product.getUrl();
 		this.xPath = product.getXPath();
@@ -40,6 +55,7 @@ public class PriceExtractor implements Runnable {
 			System.out.println("Could not find price");
 		}
 
+		// If document not available.
 		if (doc == null) {
 			// System.out.println(this.url);
 			System.out.println("document null");
@@ -47,9 +63,11 @@ public class PriceExtractor implements Runnable {
 			System.out.println("element null");
 		}
 
+		// If element parsed correctly from the page
 		if (elementPrice != null) {
 			String text = elementPrice.text().trim();
 
+			// Convert String to double price value
 			String beg = text.substring(0, text.lastIndexOf('.'));
 			String end = text.substring(text.lastIndexOf('.'));
 
@@ -65,6 +83,20 @@ public class PriceExtractor implements Runnable {
 			this.product.setCurrentPrice(price);
 			System.out.println(price);
 			this.productRepository.save(product);
+			
+			
+			// Adding details to the productStats table
+			Productstat productStat = new Productstat();
+			productStat.setProduct(this.product);
+			productStat.setPrice(price);
+			
+			java.util.Date today = new java.util.Date();
+		    java.sql.Time time = new java.sql.Time(today.getTime());
+		    System.out.println(time);
+		    
+		    productStat.setTime(time);
+		    
+		    this.productStatRepository.save(productStat);
 		}
 	}
 
