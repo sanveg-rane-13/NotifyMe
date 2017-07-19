@@ -1,11 +1,11 @@
 package com.app.notifyme.repositories;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import com.app.notifyme.models.Error;
 
-@Repository
-public interface ErrorRepository extends CrudRepository<Error, Integer> {
+@RestResource(path="/error")
+public interface ErrorRepository extends JpaRepository<Error, Integer> {
 
 }

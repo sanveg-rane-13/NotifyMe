@@ -1,12 +1,12 @@
 package com.app.notifyme.repositories;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import com.app.notifyme.models.Usercriteria;
 
 
-@Repository
-public interface UserCriteriaRepository extends CrudRepository<Usercriteria, Integer> {
+@RestResource(path="criteria")
+public interface UserCriteriaRepository extends JpaRepository<Usercriteria, Integer> {
 
 }

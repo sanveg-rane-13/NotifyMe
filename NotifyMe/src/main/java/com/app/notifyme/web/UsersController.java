@@ -12,26 +12,28 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.notifyme.models.User;
 import com.app.notifyme.repositories.UserRepository;
 
-@RestController
-@RequestMapping("/users")
+//@Controller
+//@RequestMapping("/users")
 public class UsersController {
 
 	@Autowired
 	UserRepository userRepository;
 
-	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody String addNewUser(@RequestParam String email, @RequestParam String name,
-			@RequestParam String password, @RequestParam String phoneNumber, @RequestParam byte type) {
-		User user = new User();
-		user.setEmail(email);
-		user.setName(name);
-		user.setPassword(password);
-		user.setPhoneNumber(phoneNumber);
-		user.setProfileImage(null);
-		user.setType(type);
-		userRepository.save(user);
-		return "New User Added";
-	}
+	// @RequestMapping(method = RequestMethod.POST)
+	// public @ResponseBody String addNewUser(@RequestParam String email,
+	// @RequestParam String name,
+	// @RequestParam String password, @RequestParam String phoneNumber,
+	// @RequestParam byte type) {
+	// User user = new User();
+	// user.setEmail(email);
+	// user.setName(name);
+	// user.setPassword(password);
+	// user.setPhoneNumber(phoneNumber);
+	// user.setProfileImage(null);
+	// user.setType(type);
+	// userRepository.save(user);
+	// return "New User Added";
+	// }
 
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody List<User> getAll() {
