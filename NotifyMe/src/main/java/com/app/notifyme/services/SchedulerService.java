@@ -36,14 +36,20 @@ public class SchedulerService {
 	private List<Product> productsList = new CopyOnWriteArrayList<>();
 	private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-	@Scheduled(fixedRate = 10000)
+	// @Scheduled(fixedRate = 10000)
 	public void updateProductList() {
 		System.out.println("Updating products arraylist");
 		this.productsList = productRepository.findAll();
 	}
 
-	@Scheduled(cron = "0 0/1 * * * ? ")
-	public void checkProductsPrice() {
+	// Schedule the method for each minute
+	// @Scheduled(cron = "0 0/1 * * * ? ")
+	@Scheduled(fixedRate = 10000, initialDelay = 100)
+	private void checkProductsPrice() {
+		
+		if(productsList.size() == 0) {
+			updateProductList();
+		}
 
 		System.out.println("Printing product prices: ");
 
@@ -75,10 +81,10 @@ public class SchedulerService {
 			productStat.setTime(time);
 
 			this.productStatRepository.save(productStat);
-			
+
 		}
 	}
-	
+
 	// Schedule the process at particular time
 	@Scheduled(cron = "0 04 18 * * ?", zone = "Asia/Kolkata")
 	public void updateProductStatsFile() {
