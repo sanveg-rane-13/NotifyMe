@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.app.notifyme.models.Previousstat;
 import com.app.notifyme.models.Product;
 import com.app.notifyme.models.Productstat;
+import com.app.notifyme.repositories.PreviousStatRepository;
 import com.app.notifyme.repositories.ProductRepository;
 import com.app.notifyme.repositories.ProductStatRepository;
 
@@ -33,12 +35,15 @@ public class SchedulerService {
 	@Autowired
 	private ProductStatRepository productStatRepository;
 
+	@Autowired
+	private PreviousStatRepository previousStatRepository;
+
 	private List<Product> productsList = new CopyOnWriteArrayList<>();
 	private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 	// @Scheduled(fixedRate = 10000)
 	public void updateProductList() {
-		System.out.println("Updating products arraylist");
+		System.out.println("Executing: updateProductList() ---------------------------------");
 		this.productsList = productRepository.findAll();
 	}
 
@@ -46,7 +51,7 @@ public class SchedulerService {
 	// @Scheduled(cron = "0 0/1 * * * ? ")
 	@Scheduled(fixedRate = 10000)
 	private void checkProductsPrice() {
-
+		System.out.println("Executing: checkProductsPrice() ---------------------------------");
 		if (productsList.size() == 0) {
 			updateProductList();
 		}
@@ -63,10 +68,10 @@ public class SchedulerService {
 	}
 
 	// Schedule the process every hour
-	// @Scheduled(cron = "0 0/1 * 1/1 * ?")
-	@Scheduled(fixedRate = 20000, initialDelay = 5000)
+	@Scheduled(cron = "0 0/1 * 1/1 * ?")
+	// @Scheduled(fixedRate = 20000, initialDelay = 5000)
 	public void updateProductStatsTable() {
-		System.out.println("Updating statistics");
+		System.out.println("Executing: updateProductStatsTable() ---------------------------------");
 		Iterator<Product> iterator = this.productsList.iterator();
 
 		while (iterator.hasNext()) {
@@ -87,8 +92,9 @@ public class SchedulerService {
 	}
 
 	// Schedule the process at particular time
-	// @Scheduled(cron = "0 04 18 * * ?", zone = "Asia/Kolkata")
+	@Scheduled(cron = "0 00 18 * * ?", zone = "Asia/Kolkata")
 	public void updateProductStatsFile() {
+		System.out.println("Executing: updateProductStatsFile() ---------------------------------");
 		Iterator<Product> i = this.productsList.iterator();
 
 		while (i.hasNext()) {
@@ -97,7 +103,17 @@ public class SchedulerService {
 			double prodMinVal = this.productStatRepository.findProductMinValue(prodId);
 			System.out.println(prodMinVal);
 			Productstat prodStat = this.productStatRepository.findMinValueStat(prodMinVal);
-			System.out.println(prodStat);
+			Previousstat prevStat = new Previousstat();
+
+			java.util.Date today = new java.util.Date();
+			@SuppressWarnings("deprecation")
+			java.sql.Date date = new java.sql.Date(today.getDate());
+
+			prevStat.setDate(date);
+			prevStat.setMinimumPrice(prodMinVal);
+			prevStat.setProduct(prodStat.getProduct());
+
+			this.previousStatRepository.save(prevStat);
 		}
 	}
 }
