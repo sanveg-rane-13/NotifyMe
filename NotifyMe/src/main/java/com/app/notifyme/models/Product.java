@@ -4,19 +4,18 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
 
-
 /**
  * The persistent class for the products database table.
  * 
  */
 @Entity
-@Table(name="products")
-@NamedQuery(name="Product.findAll", query="SELECT p FROM Product p")
+@Table(name = "products")
+@NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")
 public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int productId;
 
 	private double currentPrice;
@@ -31,16 +30,20 @@ public class Product implements Serializable {
 
 	private String XPath;
 
-	//bi-directional many-to-one association to Error
-	@OneToMany(mappedBy="product")
+	// bi-directional many-to-one association to Error
+	@OneToMany(mappedBy = "product")
 	private List<Error> errors;
 
-	//bi-directional many-to-one association to Productstat
-	@OneToMany(mappedBy="product")
+	// bi-directional many-to-one association to Productstat
+	@OneToMany(mappedBy = "product")
 	private List<Productstat> productstats;
 
-	//bi-directional many-to-one association to Usercriteria
-	@OneToMany(mappedBy="product")
+	// bi-directional many-to-one association to Previousstat
+	@OneToMany(mappedBy = "product")
+	private List<Previousstat> prevstats;
+
+	// bi-directional many-to-one association to Usercriteria
+	@OneToMany(mappedBy = "product")
 	private List<Usercriteria> usercriterias;
 
 	public Product() {

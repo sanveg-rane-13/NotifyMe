@@ -1,8 +1,8 @@
 package com.app.notifyme.services;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.app.notifyme.models.Previousstat;
 import com.app.notifyme.models.Product;
+import com.app.notifyme.models.Productstat;
+import com.app.notifyme.repositories.PreviousStatRepository;
 import com.app.notifyme.repositories.ProductRepository;
 import com.app.notifyme.repositories.ProductStatRepository;
-
 
 /*
  * Component to schedule check on product prices from various websites
@@ -26,31 +28,92 @@ import com.app.notifyme.repositories.ProductStatRepository;
 @Component
 public class SchedulerService {
 
-	private List<Product> prodList = Collections.synchronizedList(new ArrayList<>());
-
+	// Injecting dependencies
 	@Autowired
 	private ProductRepository productRepository;
-	
-	@Autowired
-	private ProductStatRepository  productStatRepository;
 
+	@Autowired
+	private ProductStatRepository productStatRepository;
+
+	@Autowired
+	private PreviousStatRepository previousStatRepository;
+
+	private List<Product> productsList = new CopyOnWriteArrayList<>();
 	private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-	@Scheduled(fixedRate = 25000)
+	// @Scheduled(fixedRate = 10000)
 	public void updateProductList() {
-		System.out.println("Product array updated");
-		this.prodList = productRepository.findAll();
+		System.out.println("Executing: updateProductList() ---------------------------------");
+		this.productsList = productRepository.findAll();
 	}
 
-	@Scheduled(fixedRate = 10000, initialDelay = 100)
-	public void checkProductsPrice() {
+	// Schedule the method for each minute
+	// @Scheduled(cron = "0 0/1 * * * ? ")
+	@Scheduled(fixedRate = 10000)
+	private void checkProductsPrice() {
+		System.out.println("Executing: checkProductsPrice() ---------------------------------");
+		if (productsList.size() == 0) {
+			updateProductList();
+		}
 
-		System.out.println("Printing list: ");
+		System.out.println("Printing product prices: ");
 
-		for (Product product : this.prodList) {
+		Iterator<Product> iterator = this.productsList.iterator();
 
-			PriceExtractor pExtract = new PriceExtractor(product,productRepository, productStatRepository);
+		while (iterator.hasNext()) {
+			Product product = iterator.next();
+			PriceExtractor pExtract = new PriceExtractor(product, productRepository, productStatRepository);
 			executorService.execute(pExtract);
+		}
+	}
+
+	// Schedule the process every hour
+	@Scheduled(cron = "0 0/1 * 1/1 * ?")
+	// @Scheduled(fixedRate = 20000, initialDelay = 5000)
+	public void updateProductStatsTable() {
+		System.out.println("Executing: updateProductStatsTable() ---------------------------------");
+		Iterator<Product> iterator = this.productsList.iterator();
+
+		while (iterator.hasNext()) {
+			Product product = iterator.next();
+
+			Productstat productStat = new Productstat();
+			productStat.setProduct(product);
+			productStat.setPrice(product.getCurrentPrice());
+
+			java.util.Date today = new java.util.Date();
+			java.sql.Time time = new java.sql.Time(today.getTime());
+			System.out.println("updated stats table: " + product.getProductId() + " at " + time);
+			productStat.setTime(time);
+
+			this.productStatRepository.save(productStat);
+		}
+		updateProductStatsFile();
+	}
+
+	// Schedule the process at particular time
+	@Scheduled(cron = "0 00 18 * * ?", zone = "Asia/Kolkata")
+	public void updateProductStatsFile() {
+		System.out.println("Executing: updateProductStatsFile() ---------------------------------");
+		Iterator<Product> i = this.productsList.iterator();
+
+		while (i.hasNext()) {
+			int prodId = i.next().getProductId();
+			System.out.print("updated stats file: " + prodId + " minPrice: ");
+			double prodMinVal = this.productStatRepository.findProductMinValue(prodId);
+			System.out.println(prodMinVal);
+			Productstat prodStat = this.productStatRepository.findMinValueStat(prodMinVal);
+			Previousstat prevStat = new Previousstat();
+
+			java.util.Date today = new java.util.Date();
+			@SuppressWarnings("deprecation")
+			java.sql.Date date = new java.sql.Date(today.getDate());
+
+			prevStat.setDate(date);
+			prevStat.setMinimumPrice(prodMinVal);
+			prevStat.setProduct(prodStat.getProduct());
+
+			this.previousStatRepository.save(prevStat);
 		}
 	}
 }
