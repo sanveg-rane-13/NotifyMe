@@ -1,8 +1,8 @@
 package com.app.notifyme.services;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -11,9 +11,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.app.notifyme.models.Product;
+import com.app.notifyme.models.Productstat;
 import com.app.notifyme.repositories.ProductRepository;
 import com.app.notifyme.repositories.ProductStatRepository;
-
 
 /*
  * Component to schedule check on product prices from various websites
@@ -26,31 +26,62 @@ import com.app.notifyme.repositories.ProductStatRepository;
 @Component
 public class SchedulerService {
 
-	private List<Product> prodList = Collections.synchronizedList(new ArrayList<>());
-
+	// Injecting dependencies
 	@Autowired
 	private ProductRepository productRepository;
-	
-	@Autowired
-	private ProductStatRepository  productStatRepository;
 
+	@Autowired
+	private ProductStatRepository productStatRepository;
+
+	private List<Product> productsList = new CopyOnWriteArrayList<>();
 	private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-	@Scheduled(fixedRate = 25000)
+	@Scheduled(fixedRate = 10000)
 	public void updateProductList() {
-		System.out.println("Product array updated");
-		this.prodList = productRepository.findAll();
+		System.out.println("Updating products arraylist");
+		this.productsList = productRepository.findAll();
 	}
 
-	@Scheduled(fixedRate = 10000, initialDelay = 100)
+	@Scheduled(cron = "0 0/1 * * * ? ")
 	public void checkProductsPrice() {
 
-		System.out.println("Printing list: ");
+		System.out.println("Printing product prices: ");
 
-		for (Product product : this.prodList) {
+		Iterator<Product> iterator = this.productsList.iterator();
 
-			PriceExtractor pExtract = new PriceExtractor(product,productRepository, productStatRepository);
+		while (iterator.hasNext()) {
+			Product product = iterator.next();
+			PriceExtractor pExtract = new PriceExtractor(product, productRepository, productStatRepository);
 			executorService.execute(pExtract);
 		}
+	}
+
+	// Schedule the process every hour
+	@Scheduled(cron = "	0 30 12 1/1 * ?")
+	public void updateProductStatsTable() {
+		System.out.println("Updating statistics");
+		Iterator<Product> iterator = this.productsList.iterator();
+
+		while (iterator.hasNext()) {
+			Product product = iterator.next();
+
+			Productstat productStat = new Productstat();
+			productStat.setProduct(product);
+			productStat.setPrice(product.getCurrentPrice());
+
+			java.util.Date today = new java.util.Date();
+			java.sql.Time time = new java.sql.Time(today.getTime());
+			System.out.println("updated stats table: " + product.getProductId() + " at " + time);
+			productStat.setTime(time);
+
+			this.productStatRepository.save(productStat);
+			
+		}
+	}
+	
+	// Schedule the process at particular time
+	@Scheduled(cron = "0 04 18 * * ?", zone = "Asia/Kolkata")
+	public void updateProductStatsFile() {
+		System.out.println("Its time");
 	}
 }

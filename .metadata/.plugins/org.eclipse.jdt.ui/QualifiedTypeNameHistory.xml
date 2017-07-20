@@ -17,7 +17,6 @@
 <fullyQualifiedTypeName name="org.springframework.scheduling.annotation.EnableScheduling"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
 <fullyQualifiedTypeName name="org.springframework.scheduling.annotation.Scheduled"/>
 <fullyQualifiedTypeName name="java.net.URL"/>
 <fullyQualifiedTypeName name="java.net.URLConnection"/>
@@ -41,4 +40,9 @@
 <fullyQualifiedTypeName name="org.springframework.data.jpa.repository.Query"/>
 <fullyQualifiedTypeName name="com.app.notifyme.models.Product"/>
 <fullyQualifiedTypeName name="com.app.notifyme.repositories.ProductRepository"/>
+<fullyQualifiedTypeName name="java.sql.Time"/>
+<fullyQualifiedTypeName name="java.time.LocalDate"/>
+<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+<fullyQualifiedTypeName name="com.app.notifyme.models.Productstat"/>
+<fullyQualifiedTypeName name="com.app.notifyme.repositories.ProductStatRepository"/>
 </qualifiedTypeNameHistroy>

@@ -23,7 +23,7 @@ import com.app.notifyme.repositories.ProductStatRepository;
  */
 
 public class PriceExtractor implements Runnable {
-	
+
 	private ProductStatRepository productStatRepository;
 	private ProductRepository productRepository;
 
@@ -31,7 +31,8 @@ public class PriceExtractor implements Runnable {
 	private final String xPath;
 	private Product product;
 
-	public PriceExtractor(Product product, ProductRepository productRepository, ProductStatRepository productStatRepository) {
+	public PriceExtractor(Product product, ProductRepository productRepository,
+			ProductStatRepository productStatRepository) {
 		super();
 		this.productRepository = productRepository;
 		this.productStatRepository = productStatRepository;
@@ -52,7 +53,7 @@ public class PriceExtractor implements Runnable {
 			}
 
 		} catch (IOException e) {
-			System.out.println("Could not find price");
+			System.out.println(this.product.getProductId() + " -> " + "Could not find price");
 		}
 
 		// If document not available.
@@ -80,23 +81,27 @@ public class PriceExtractor implements Runnable {
 			}
 			double price = Double.parseDouble(builder.toString() + end);
 
-			this.product.setCurrentPrice(price);
-			System.out.println(price);
-			this.productRepository.save(product);
-			
-			
-			// Adding details to the productStats table
-			Productstat productStat = new Productstat();
-			productStat.setProduct(this.product);
-			productStat.setPrice(price);
-			
-			java.util.Date today = new java.util.Date();
-		    java.sql.Time time = new java.sql.Time(today.getTime());
-		    System.out.println(time);
-		    
-		    productStat.setTime(time);
-		    
-		    this.productStatRepository.save(productStat);
+			System.out.println(this.product.getProductId() + " -> " + price);
+			double savedPrice = this.product.getCurrentPrice();
+
+			if (savedPrice != price) {
+				this.product.setCurrentPrice(price);
+				this.productRepository.save(product);
+			}
+
+			if (savedPrice > price) {
+				// Adding details to the productStats table
+				Productstat productStat = new Productstat();
+				productStat.setProduct(this.product);
+				productStat.setPrice(price);
+
+				java.util.Date today = new java.util.Date();
+				java.sql.Time time = new java.sql.Time(today.getTime());
+				System.out.println("updated stats table: " + product.getProductId() + " at " + time);
+				productStat.setTime(time);
+
+				this.productStatRepository.save(productStat);
+			}
 		}
 	}
 
