@@ -44,10 +44,10 @@ public class SchedulerService {
 
 	// Schedule the method for each minute
 	// @Scheduled(cron = "0 0/1 * * * ? ")
-	@Scheduled(fixedRate = 10000, initialDelay = 100)
+	@Scheduled(fixedRate = 10000)
 	private void checkProductsPrice() {
-		
-		if(productsList.size() == 0) {
+
+		if (productsList.size() == 0) {
 			updateProductList();
 		}
 
@@ -63,7 +63,8 @@ public class SchedulerService {
 	}
 
 	// Schedule the process every hour
-	@Scheduled(cron = "	0 30 12 1/1 * ?")
+	// @Scheduled(cron = "0 0/1 * 1/1 * ?")
+	@Scheduled(fixedRate = 20000, initialDelay = 5000)
 	public void updateProductStatsTable() {
 		System.out.println("Updating statistics");
 		Iterator<Product> iterator = this.productsList.iterator();
@@ -81,13 +82,22 @@ public class SchedulerService {
 			productStat.setTime(time);
 
 			this.productStatRepository.save(productStat);
-
 		}
+		updateProductStatsFile();
 	}
 
 	// Schedule the process at particular time
-	@Scheduled(cron = "0 04 18 * * ?", zone = "Asia/Kolkata")
+	// @Scheduled(cron = "0 04 18 * * ?", zone = "Asia/Kolkata")
 	public void updateProductStatsFile() {
-		System.out.println("Its time");
+		Iterator<Product> i = this.productsList.iterator();
+
+		while (i.hasNext()) {
+			int prodId = i.next().getProductId();
+			System.out.print("updated stats file: " + prodId + " minPrice: ");
+			double prodMinVal = this.productStatRepository.findProductMinValue(prodId);
+			System.out.println(prodMinVal);
+			Productstat prodStat = this.productStatRepository.findMinValueStat(prodMinVal);
+			System.out.println(prodStat);
+		}
 	}
 }

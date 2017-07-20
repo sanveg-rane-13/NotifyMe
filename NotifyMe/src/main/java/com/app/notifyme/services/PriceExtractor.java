@@ -47,13 +47,14 @@ public class PriceExtractor implements Runnable {
 		Element elementPrice = null;
 
 		try {
-			doc = Jsoup.connect(this.url).get();
+			doc = Jsoup.connect(this.url).userAgent("Mozilla").timeout(20000).get();
 			if (doc != null) {
 				elementPrice = doc.getElementById(this.xPath);
 			}
 
 		} catch (IOException e) {
 			System.out.println(this.product.getProductId() + " -> " + "Could not find price");
+			System.out.println(e);
 		}
 
 		// If document not available.
@@ -90,6 +91,7 @@ public class PriceExtractor implements Runnable {
 			}
 
 			if (savedPrice > price) {
+
 				// Adding details to the productStats table
 				Productstat productStat = new Productstat();
 				productStat.setProduct(this.product);
