@@ -55,6 +55,7 @@ public class SchedulerService {
 	private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 	// @Scheduled(fixedRate = 10000)
+	@Scheduled(cron = "0 00 9 * * ?", zone = "Asia/Kolkata")
 	public void updateProductList() {
 		logger.info("Executing: updateProductList() ---------------------------------");
 		this.productsList = productRepository.findAll();
@@ -74,8 +75,8 @@ public class SchedulerService {
 		while (iterator.hasNext()) {
 			Product product = iterator.next();
 			if (product.getFaultStatus() == FaultStatus.NORMAL.getFaultStatus() && product.getTrackCount() > 0) {
-				PriceExtractor pExtract = new PriceExtractor(product, productRepository, productStatRepository, errorNotificationService,
-						notifyUserService);
+				PriceExtractor pExtract = new PriceExtractor(product, productRepository, productStatRepository,
+						errorNotificationService, notifyUserService);
 				executorService.execute(pExtract);
 			}
 		}

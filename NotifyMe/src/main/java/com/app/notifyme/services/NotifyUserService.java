@@ -8,7 +8,9 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
+import com.app.notifyme.models.Product;
 import com.app.notifyme.models.Usercriteria;
+import com.app.notifyme.repositories.ProductRepository;
 import com.app.notifyme.repositories.UserCriteriaRepository;
 
 @Component
@@ -17,7 +19,10 @@ public class NotifyUserService {
 	@Autowired
 	UserCriteriaRepository userCriteriaRepository;
 
-	final String sender = "sanveg.rane@somaiya.edu";
+	@Autowired
+	ProductRepository productRepository;
+
+	final String sender = "notifymewt@gmail.com";
 
 	final static Logger logger = Logger.getLogger(NotifyUserService.class);
 
@@ -31,14 +36,21 @@ public class NotifyUserService {
 
 						logger.info("Sending email");
 						EmailService emailService = new EmailServiceImpl();
-						emailService.setSender("srsanrocks1@gmail.com");
+						emailService.setSenderPassword(sender, "Bloodseeker25");
 						boolean result = emailService.sendEmail(userCriteria.getUser(), userCriteria.getProduct());
 
 						if (result) {
-							System.out.println("Updating criteria");
+							logger.info("User notified -> criteria updated");
 							userCriteria.setNotifiedDate(Date.valueOf(LocalDate.now()));
 							userCriteria.setFinalPrice(price);
 							userCriteriaRepository.save(userCriteria);
+
+							Product product = userCriteria.getProduct();
+							int trackCount = product.getTrackCount();
+							product.setTrackCount(trackCount - 1);
+
+							productRepository.save(product);
+
 						}
 					}
 				}

@@ -5,6 +5,6 @@ import com.app.notifyme.models.User;
 
 public interface EmailService {
 	
-	void setSender(String senderEmail);
 	boolean sendEmail(User user, Product product);
+	void setSenderPassword(String senderEmail, String password);
 }
