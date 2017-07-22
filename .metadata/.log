@@ -10913,3 +10913,9 @@ java.nio.file.FileSystemException: C:\Users\ADMIN\wissen-project\RegistrationFor
 	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
 !SUBENTRY 2 org.eclipse.core.resources 4 273 2017-07-23 00:50:33.614
 !MESSAGE Could not delete 'C:\Users\ADMIN\wissen-project\RegistrationForm'.
+
+!ENTRY org.eclipse.lsp4e 1 0 2017-07-23 00:58:05.352
+!MESSAGE Non IFiles not supported yet
+
+!ENTRY org.eclipse.lsp4e 1 0 2017-07-23 00:58:05.368
+!MESSAGE Non IFiles not supported yet
