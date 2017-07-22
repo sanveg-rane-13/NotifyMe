@@ -1,8 +1,5 @@
 package com.app.notifyme.services;
 
-/*
- * 
- */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,13 +10,24 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+/*
+ * Render page service that takes an URL as input
+ * Then the page is extracted from the URL, cross brower security is removed
+ * Javascript code to extract xPaths in extracted
+ * Then the page is saved as resource and sent as a service to frontend to render as a page
+ * in the iFrame tag.
+ */
 
 @CrossOrigin(origins = "*")
 @Service("renderPageService")
 public class RenderPageServiceImpl implements RenderPageService {
-	
+
+	private final static Logger logger = Logger.getLogger(RenderPageServiceImpl.class);
 	private final static String path = "C:/Users/ADMIN/wissen-project/NotifyMe/src/main/resources/xpath.js";
 
 	private static final String JS;
@@ -29,8 +37,7 @@ public class RenderPageServiceImpl implements RenderPageService {
 	static {
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(
-					new FileReader(new File(path)));
+			br = new BufferedReader(new FileReader(new File(path)));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -90,7 +97,7 @@ public class RenderPageServiceImpl implements RenderPageService {
 			connection = targetUrl.openConnection();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			// System.out.println("could not connect to "+url);
+			logger.info("could not connect to " + url);
 			return "could not connect to " + url;
 		}
 		// connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows
@@ -98,7 +105,6 @@ public class RenderPageServiceImpl implements RenderPageService {
 
 		String line;
 		String response = "";
-		long totalBytes = 0;
 
 		StringBuilder builder = new StringBuilder();
 		BufferedReader reader = null;
@@ -111,8 +117,9 @@ public class RenderPageServiceImpl implements RenderPageService {
 		try {
 			while ((line = reader.readLine()) != null) {
 				builder.append(line);
-				totalBytes += line.getBytes("UTF-8").length;
-				// System.out.println("Total bytes read :: " + totalBytes);
+				int totalBytes = line.getBytes("UTF-8").length;
+				logger.info("Total bytes read :: " + totalBytes);
+
 			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
