@@ -28,6 +28,9 @@ import com.app.notifyme.services.RenderPageService;
 public class ProductController {
 
 	final static Logger logger = Logger.getLogger(ProductController.class);
+	
+	private final int initialTrackCount = 1;
+	private final int initiaFaultStatus = 0;
 
 	@Autowired
 	private ProductRepository productRepository;
@@ -41,7 +44,6 @@ public class ProductController {
 	@Autowired
 	MostSearchedProductService mostSearchedProductService;
 
-	@RequestMapping(path = "/addProduct", method = RequestMethod.POST)
 	public int addProduct(Product product) {
 		String url = product.getUrl();
 		int id;
@@ -56,6 +58,8 @@ public class ProductController {
 			logger.info("updated product count: " + existingProd.getProductName());
 			id = existingProd.getProductId();
 		} else {
+			product.setTrackCount(initialTrackCount);
+			product.setFaultStatus(initiaFaultStatus);
 			productRepository.save(product);
 			logger.info("added product" + product.getProductName());
 			id = product.getProductId();

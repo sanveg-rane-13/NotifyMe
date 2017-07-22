@@ -85,24 +85,6 @@ public class PriceExtractor implements Runnable {
 			return;
 		}
 
-		// try {
-		// doc = Jsoup.connect(this.url).userAgent("Mozilla").timeout(20000).get();
-		// if (doc != null) {
-		// elementPrice = doc.getElementById(this.xPath);
-		// }
-		//
-		// } catch (IOException e) {
-		// logger.warn(this.product.getProductId() + " -> " + "Could not find price");
-		// logger.warn(e);
-		// }
-		//
-		// // If document not available.
-		// if (doc == null) {
-		// System.out.println("document null");
-		// } else if (elementPrice == null) {
-		// System.out.println("element null");
-		// }
-
 		// If element parsed correctly from the page
 		if (elementPrice != null) {
 			String text = elementPrice.text().trim();
@@ -126,7 +108,7 @@ public class PriceExtractor implements Runnable {
 			if (savedPrice != price) {
 				this.product.setCurrentPrice(price);
 				int productId = this.product.getProductId();
-				// this.notifyUserService.checkCriteriaMatch(productId, price);
+				this.notifyUserService.checkCriteriaMatch(productId, price);
 
 				this.productRepository.save(product);
 			}
