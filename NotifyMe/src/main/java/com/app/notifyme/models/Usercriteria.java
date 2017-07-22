@@ -2,6 +2,9 @@ package com.app.notifyme.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 
@@ -36,6 +39,7 @@ public class Usercriteria implements Serializable {
 	private User user;
 
 	//bi-directional many-to-one association to Product
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="ProductId")
 	private Product product;

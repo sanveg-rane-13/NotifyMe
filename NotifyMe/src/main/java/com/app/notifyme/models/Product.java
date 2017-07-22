@@ -2,6 +2,9 @@ package com.app.notifyme.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 /**
@@ -31,19 +34,22 @@ public class Product implements Serializable {
 	private String XPath;
 
 	// bi-directional many-to-one association to Error
+	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	private List<Error> errors;
 
 	// bi-directional many-to-one association to Productstat
+	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	private List<Productstat> productstats;
 
 	// bi-directional many-to-one association to Previousstat
+	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	private List<Previousstat> prevstats;
 
 	// bi-directional many-to-one association to Usercriteria
-	@OneToMany(mappedBy = "product")
+	@OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
 	private List<Usercriteria> usercriterias;
 
 	public Product() {

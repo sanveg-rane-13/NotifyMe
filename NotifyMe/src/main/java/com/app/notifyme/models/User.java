@@ -2,15 +2,17 @@ package com.app.notifyme.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
 
 /**
  * The persistent class for the user database table.
  * 
  */
 @Entity
-@NamedQuery(name="User.findAll", query="SELECT u FROM User u")
+@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -26,10 +28,11 @@ public class User implements Serializable {
 	@Lob
 	private byte[] profileImage;
 
-	private byte type;
+	private String role;
 
-	//bi-directional many-to-one association to Usercriteria
-	@OneToMany(mappedBy="user")
+	// bi-directional many-to-one association to Usercriteria
+	@JsonIgnore
+	@OneToMany(mappedBy = "user")
 	private List<Usercriteria> usercriterias;
 
 	public User() {
@@ -75,12 +78,12 @@ public class User implements Serializable {
 		this.profileImage = profileImage;
 	}
 
-	public byte getType() {
-		return this.type;
+	public String getRole() {
+		return role;
 	}
 
-	public void setType(byte type) {
-		this.type = type;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public List<Usercriteria> getUsercriterias() {
