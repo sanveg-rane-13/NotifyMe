@@ -1,0 +1,136 @@
+
+
+<div class="header">
+  <h3> List of your products</h3>
+</div>
+<div class="mainSection">
+  <div class="card" *ngFor="let product of products" style="display:inline-block; margin-right:1rem;margin-top:1rem">
+  <div class="container expand" data-toggle="modal" data-target="#myModal" (click)="showDiv(product)">
+    <h4><b>{{product.productName}}</b></h4>
+
+  </div> <br>
+</div>
+  </div>
+
+
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+   
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Please enter the criteria</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-responsive" >
+        <thead>
+          <tr>
+            <td><b>Product Id</b></td>
+            <td><b>Product Name</b></td>
+            <td><b>Status</b></td>
+            <td>Current Price</td>
+            <td><b>Date</b></td>
+            <td><b>Criteria</b></td>
+
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+             <td>
+              {{currentProduct.productId}}
+            </td> 
+            <td>
+              {{currentProduct.productName}}
+            </td>
+            <td>
+              {{currentProduct.status}}
+            </td>
+            <td>
+              {{currentProduct.currentPrice}}
+            </td>
+            <td>
+              {{currentProduct.date}}
+            </td>
+            <td>
+              {{currentProduct.criteria}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div> 
+
+  <!-- <div class="sidePane">
+    <div class="closeButton">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </div>
+    <div >
+      <h3 class="text-center">Product details</h3>
+      <hr/>
+      <table class="table table-responsive" *ngIf="currentProduct">
+        <thead>
+          <tr>
+            <td><b>Product Id</b></td>
+            <td><b>Product Name</b></td>
+            <td><b>Status</b></td>
+            <td>Current Price</td>
+            <td><b>Date</b></td>
+            <td><b>Criteria</b></td>
+
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+             <td>
+              {{currentProduct.productId}}
+            </td> 
+            <td>
+              {{currentProduct.productName}}
+            </td>
+            <td>
+              {{currentProduct.status}}
+            </td>
+            <td>
+              {{currentProduct.currentPrice}}
+            </td>
+            <td>
+              {{currentProduct.date}}
+            </td>
+            <td>
+              {{currentProduct.criteria}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+  </div> -->
+
+
+
+
+<!-- <body>
+  <div class="container col-xs-9 col-md-9 col-sm-9" style="margin-top: 30px">
+    <div class="panel panel-default" *ngFor="let product of products">
+   
+      <div class="panel-heading" (click)="showDiv(product.id)">
+        <h2> {{product.productName }}</h2>
+        <span class="label btn btn-success" id="showDiv">{{selectedIndex===product.productId ?'Hide':'Show'}} details</span>
+
+      </div>
+      
+
+  </div>
+</body> -->

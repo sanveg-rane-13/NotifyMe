@@ -1,0 +1,23 @@
+<div class="container ">
+     <table class="table table-bordered text-center">
+      <thead>
+        <tr > 
+        <th class="text-center">Error Id</th>
+          <th class="text-center">Error Type</th>
+         <th class="text-center">Action</th> 
+        </tr>
+      </thead> 
+        <tbody >
+          <tr *ngFor="let error of errors" [class.info]="error.errorType-1==0" [class.warning]="error.errorType-2==0">
+            <td class="col-md-3" >{{error.id}}</td>
+            <td class="col-md-6">{{error.errorType==1?"URL fail":"Xpath fail"}}</td>
+            <td class="col-md-3"><button class="btn btn-primary" (click)='fixError(error)' >Fix</button></td>    
+        
+          </tr>          
+
+        </tbody>
+    
+    </table>
+   
+
+</div>

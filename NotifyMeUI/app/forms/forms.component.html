@@ -1,0 +1,32 @@
+<div *ngIf="!name; else formInfo">
+<form [formGroup]="inputForm" (ngSubmit)="checkUser(inputForm.value)">
+  <div class="form-container">
+    <div class="row columns">
+      <h1>Login</h1>
+      <label>Name
+        <input  type="text" formControlName="name">
+      </label>
+       <div class="alert" *ngIf="!inputForm.controls['name'].valid && inputform.controls['name'].touched">ABc</div> 
+<br>
+      <label>Password
+        <input  type="text" formControlName="password">
+      </label>
+<!-- <div class="alert" *ngIf="!inputForm.controls['password'].valid && inputForm.controls['password'].touched">Password must be atleat 8 characters long and atmost 20</div> -->
+   <div class="alert" *ngIf="!inputForm.controls['password'].valid && inputForm.controls['password'].touched">Password must be of minimum 8 characters </div>
+
+<input type="submit" class="btn btn-success" value="Submit Form" [disabled]="!inputForm.valid">
+
+    </div>
+</div>
+</form>
+</div>
+
+<ng-template #formInfo>
+  <div class="form-container">
+    <div class="row-columns">
+      <h1>{{name}}</h1>
+      <p>{{password}}</p>
+    </div>
+  </div>
+</ng-template> 
+

@@ -1,0 +1,83 @@
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Edit Product</div>
+            <div class="panel-body">
+                <form [formGroup]="adminForm" (submit)="sendVerdict()">
+                    <div class="form-group"><label>URL</label>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input type="text" id="URL" class="form-control" formControlName="URL" />
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary" type="button" id="test2" (click)="load_home()">Load Page</button>
+                            </div>
+                        </div>
+                    </div>
+                    <iframe name="test" id="test" width=100% height="300"></iframe>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input readonly type="text" class="form-control" formControlName="name" id="name">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button " class="btn btn-primary" (click)="setVal('name')">Product Name</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="price">Price</label>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <input readonly type="text" formControlName="price" class="form-control" id="price">
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class=" btn btn-primary center-block" (click)="setVal('price')">Price</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="xpath">Xpath</label>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <input readonly type="text" formControlName="xpath" class="form-control" id="xpath">
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class=" btn btn-primary " (click)="setVal('xpath')">Xpath</button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="verdict">Verdict</label>
+                            <select name="verdict" formControlName="verdict" class="form-control">
+
+                          <option value="1">URL Fixed</option>
+                          <option value="2">Xpath Fixed</option>
+                          <option value="3">Product out of stock</option>
+                         
+                        </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="button" (click)="sendVerdict()" [class.disabled]="adminForm.invalid" class="btn btn-success center-block">Submit</button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+</body>

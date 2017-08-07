@@ -1,0 +1,83 @@
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Add Product</div>
+            <div class="panel-body">
+
+                <iframe name="test" id="test" width=100% height="300"></iframe>
+                <form [formGroup]="productForm" (submit)="addProduct()">
+
+                    <div class="form-group">
+                        <label>URL</label>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input type="text" id="URL" class="form-control" formControlName='url' />
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary" type="button" id="test2" (click)="load_home()">Load Page</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <div class="row">
+                            <div class="col-md-10"> <input readonly type="text" class="form-control" id="productName" formControlName='productName'/>
+                                
+                            </div>
+                            <div class="col-md-2"> <button type="button " class="btn btn-primary" (click)="setVal('productName')">Product Name</button>
+                            <button type="button" (click)="toggleSearch()" [class.active]="toggleSearch()"> <span class="glyphicon glyphicon-zoom-in" ></span> </button>
+                            </div>
+                        <div *ngIf="toggleSearch()" class="container " >  <app-product-suggest (onProductPicked)="getProductDetail($event)" ></app-product-suggest>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="price">Price</label>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input readonly type="text" class="form-control" id="currentPrice" formControlName='price' />
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary" (click)="setVal('currentPrice')">Price</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="name">Xpath</label>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input readonly type="text" class="form-control" id="xPath" formControlName='xpath' />
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary" (click)="setVal('xPath')"> Xpath </button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="criteria" >Criteria</label>
+                            <input type="text" class="form-control" id="criteria" formControlName='criteria' />
+
+                        </div>
+                    </div>
+
+                            <div class="row ">
+                    <button type="submit" (click)="addProduct()" [class.disabled]="productForm.invalid" class="btn btn-success center-block">Notify Me</button>
+                            </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+
+</body>

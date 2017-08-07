@@ -1,0 +1,12 @@
+<div id="search-component">
+  <h4>Product search</h4>
+  <input #searchBox id="search-box" (keyup)="search(searchBox.value)" />
+  <div>
+    <div  class="search-result " 
+           *ngFor="let product of products | async">
+           <a (click)="gotoDetail(product,$event)" href >
+             {{product.productName}}   {{(product.url).substring(7)}}
+            </a>
+    </div>
+  </div>
+</div>

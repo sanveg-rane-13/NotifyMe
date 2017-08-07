@@ -1,0 +1,11 @@
+html,body{height:100%;margin:0;padding:0;}
+.container-fluid,.row{height:100%;background-color:white}
+.board-container{padding:20px;box-sizing:border-box}
+.board{background-color:#e1e1e1;height:100%;padding:40px;}
+/* #fixedDiv
+   {
+   width:250px; 
+   max-width:250px; 
+   display: inline-block;
+}
+  */

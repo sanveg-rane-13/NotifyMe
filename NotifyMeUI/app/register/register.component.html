@@ -1,0 +1,103 @@
+<h1 class="col-md-offset-4 col-md-12">Register to NotifyMe</h1>
+<br/><br/><br/><br/>
+<div class="row">
+    <div class="card col-md-8 col-lg-8 col-md-offset-2 ">
+        <form [formGroup]="userSignUpForm" novalidate (submit)="onSubmit(userSignUpForm)">
+
+            <div class=" hvr-grow" style="width: 100%;">
+                <div class="form-group" class="well">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" placeholder="Email (required)" class="form-control" formControlName="email" />
+                    <div class="help-block">
+                        <span *ngIf="userSignUpForm.controls.email.touched
+                         && userSignUpForm.controls.email.errors?.required" style="color:red;">
+                            Email field is empty. </span>
+                        <span *ngIf="userSignUpForm.controls.email.touched
+                         && userSignUpForm.controls.email.errors?.email" style="color:red;">
+                           Enter the email correctly. </span>
+                        <span *ngIf="userSignUpForm.controls.email.touched
+                         && userSignUpForm.controls.email.errors?.emailExists" style="color:red;">
+                           {{serverRegErrorMessage}}</span>        
+                    </div>
+                    <!-- <div *ngIf="formErrors.email" class="alert alert-danger">
+                         {{ formErrors.email }}
+                        </div> -->
+                </div>
+
+            </div>
+            <div class=" hvr-grow" style="width: 100%;">
+                <div class="form-group" class="well">
+                    <label for="fname">First Name</label>
+                     <input id="fname" type="text" placeholder="Name" class="form-control"
+                        formControlName="name" />
+                    <div class="help-block">
+                        <span *ngIf="userSignUpForm.get('name').touched
+                         && userSignUpForm.get('name').errors" style="color:red;">
+                            Please enter your first name, Its required </span>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div class=" hvr-grow" style="width: 100%;">
+                <div class="form-group" class="well">
+                    <label for="phone">Phone Number</label> <input id="phone" type="text" placeholder="Phone" class="form-control"
+                        formControlName="phoneNumber" />
+                    <div class="help-block">
+                        
+                        <span *ngIf="userSignUpForm.get('phoneNumber').touched
+                         && userSignUpForm.get('phoneNumber').errors" style="color:red;">
+                            Please enter the correct phone number of 10 digit. </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <h3>Password:</h3>
+            <div formGroupName="passWordGroup" class="well">
+
+                <div class="form-group">
+                    <label for="password">Password</label> <input id="password" class="form-control" type="password" placeholder="Password (Required)"
+                        formControlName="password" />
+                </div>
+                <div class="help-block">
+                    <span *ngIf="userSignUpForm.controls.passWordGroup.controls.password.touched
+                         && userSignUpForm.controls.passWordGroup.controls.password.errors?.minlength" style="color:red;">
+                        Enter a minimum password length of 5. </span>
+                    <span *ngIf="userSignUpForm.controls.passWordGroup.controls.password.touched
+                         && userSignUpForm.controls.passWordGroup.controls.password.errors?.required" style="color:red;">
+                        Please set a password. </span>    
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label> <input id="cpassword" class="form-control" type="password" placeholder="Confirm Password (required)"
+                        formControlName="confirmPassword" />
+                </div>
+                 <div class="help-block">
+                    
+                    <span *ngIf="userSignUpForm.controls.passWordGroup.controls.confirmPassword.touched
+                         && userSignUpForm.controls.passWordGroup.controls.confirmPassword.errors?.required" style="color:red;">
+                        Please confirm enter password. </span> 
+                        <span *ngIf="userSignUpForm.controls.passWordGroup.controls.confirmPassword.touched
+                         && userSignUpForm.controls.passWordGroup.controls.confirmPassword.errors?.match"
+                        style="color:red;">
+                        The confirmation does not match the password. </span>
+
+                </div> 
+
+
+
+            </div>
+                  
+                    
+            <button class="btn btn-primary  btn-lg center-block" [disabled]="userSignUpForm.invalid" type="submit"  >Save</button>
+            
+        </form>
+
+        <br/><br/>
+    </div>
+</div>

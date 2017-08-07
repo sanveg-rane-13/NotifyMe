@@ -1,0 +1,59 @@
+<h1 class="col-md-offset-4 col-md-12">Login to NotifyMe</h1>
+<br/><br/><br/><br/>
+<div class="row">
+    <div class="card col-md-8 col-lg-8 col-md-offset-2 ">
+        <form [formGroup]="userLoginForm" novalidate (submit)="onSubmit(userLoginForm)">
+
+            <div class=" hvr-grow" style="width: 100%;">
+                <div class="form-group" class="well">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" placeholder="Email (required)" class="form-control" formControlName="email" />
+                    <div class="help-block">
+                        <span *ngIf="userLoginForm.controls.email.touched
+                         && userLoginForm.controls.email.errors?.email" style="color:red;">
+                            Please enter correct email id. </span>
+                            
+                    </div>
+                    <!-- <div *ngIf="formErrors.email" class="alert alert-danger">
+                         {{ formErrors.email }}
+                        </div> -->
+                </div>
+
+            </div>
+
+             <div class=" hvr-grow" style="width: 100%;">
+                <div class="form-group" class="well">
+                    <label for="password">Password</label>
+                    <input id="password" type="text" placeholder="Password (required)" class="form-control" formControlName="password" />
+                    <div class="help-block">
+
+                       
+
+                        <span *ngIf="userLoginForm.controls.password.touched
+                         && userLoginForm.controls.password.errors?.required" style="color:red;">
+                            Please enter the password </span>
+                            
+                             
+                    </div>
+                    <!-- <div *ngIf="formErrors.email" class="alert alert-danger">
+                         {{ formErrors.email }}
+                        </div> -->
+                </div>
+
+            </div>
+            
+
+
+
+
+
+          
+
+
+           
+            <button class="btn btn-primary  btn-lg col-md-offset-6" [disabled]="!userLoginForm.valid" type="submit" >Save</button>
+        </form>
+
+        <br/><br/>
+    </div>
+</div>
